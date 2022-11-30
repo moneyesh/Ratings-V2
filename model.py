@@ -1,6 +1,6 @@
 """Models for movie ratings app."""
 
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy\
 
 db = SQLAlchemy()
 
@@ -8,7 +8,7 @@ db = SQLAlchemy()
 class User(db.Model):
     """A user."""
 
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     user_id = db.Column(db.Integer,
                         autoincrement= True,
@@ -19,10 +19,10 @@ class User(db.Model):
     ratings = db.relationship("Rating", back_populates="user")
 
     def __repr__(self):
-        return f'<User user_id={self.user_id} email={self.email}>'
+        return f'<User user_id={self.user_id} email={self.email} password={self.password}>'
 
 class Movie(db.Model):
-    # """A movie"""
+    """A movie"""
 
     __tablename__ = "movies"
 
@@ -46,8 +46,11 @@ class Rating(db.Model):
                         autoincrement= True,
                         primary_key = True)
     score = db.Column(db.Integer)
-    movie_id = db.Column(db.Integer, db.ForeignKey('movie'))
-    user_id =  db.Column(db.Integer, db.ForeignKey('user'))
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'))
+    user_id =  db.Column(db.Integer, db.ForeignKey('users.user_id'))
+
+    movie = db.relationship("Movie", back_populates="ratings")
+    user = db.relationship("User", back_populates="ratings")
 
     def __repr__(self):
         return f'<Rating rating_id={self.rating_id} movie_id={self.movie_id}>'
